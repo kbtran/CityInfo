@@ -22,16 +22,29 @@ namespace CityInfo.API.Controllers
 
         public IActionResult GetPointsOfInterest(int cityId)
         {
-            var city = CitiesDataStore.Current.Cities
+            try
+            {
+                // Use to throw an exception for the catch.
+                // throw new Exception("Exception example.");
+                
+                
+                var city = CitiesDataStore.Current.Cities
                 .FirstOrDefault(c => c.Id == cityId);
 
-            if(city == null)
+                if (city == null)
+                {
+                    _logger.LogInformation($"City with id {cityId} wasn't found when accessing points of interest.");
+                    return NotFound();
+                }
+
+                return Ok(city.PointsOfInterest);
+            }
+            catch (Exception ex)
             {
-                _logger.LogInformation($"City with id {cityId} wasn't found when accessing points of interest.");
-                return NotFound();
+                _logger.LogCritical($"Exception while getting points of interest for city with id {cityId}.", ex);
+                return StatusCode(500, "A problem happened while handling your request.");
             }
 
-            return Ok(city.PointsOfInterest);
         }
 
         [HttpGet("{id}", Name ="GetPointOfInterest")]
