@@ -15,7 +15,8 @@ namespace CityInfo.API.Contexts
         public CityInfoContext(DbContextOptions<CityInfoContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            // Comment out when running add-migration or update-database 
+            // Database.EnsureCreated();
         }
     }
 }
